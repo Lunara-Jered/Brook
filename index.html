@@ -25,12 +25,10 @@
             overflow-x: hidden;
             color: var(--texte);
             position: relative;
-            /* Image de fond : remplace par ton propre chemin */
             background: url('Erza.png') no-repeat center center fixed;
             background-size: cover;
         }
 
-        /* Superposition douce pour la lisibilite */
         body::before {
             content: '';
             position: fixed;
@@ -43,7 +41,6 @@
             pointer-events: none;
         }
 
-        /* Conteneur principal */
         .conteneur {
             position: relative;
             z-index: 1;
@@ -53,7 +50,6 @@
             text-align: center;
         }
 
-        /* En-tete */
         .en-tete {
             margin-bottom: 18px;
         }
@@ -74,7 +70,6 @@
             letter-spacing: 1px;
         }
 
-        /* Barre de progression */
         .barre-progression {
             background: rgba(255, 255, 255, 0.6);
             border-radius: 20px;
@@ -102,7 +97,6 @@
             font-style: italic;
         }
 
-        /* Grille des niveaux */
         .grille-niveaux {
             display: flex;
             flex-wrap: wrap;
@@ -117,7 +111,6 @@
             -webkit-backdrop-filter: blur(6px);
         }
 
-        /* Style d'un niveau (pastille) */
         .niveau {
             width: 68px;
             height: 68px;
@@ -151,7 +144,6 @@
             transition: transform 0.1s ease;
         }
 
-        /* Niveaux photo (ronds) */
         .niveau.photo {
             background: radial-gradient(circle at 35% 30%, #e8b88a, #c4926a);
             border-color: #d4a574;
@@ -162,7 +154,6 @@
             animation: briller 2.5s ease-in-out infinite;
         }
 
-        /* Niveaux video (carres arrondis) */
         .niveau.video {
             border-radius: 18px;
             background: linear-gradient(135deg, #c4927a, #a07060);
@@ -174,13 +165,11 @@
             animation: briller 2.5s ease-in-out infinite 0.3s;
         }
 
-        /* Niveau debloque */
         .niveau.debloque {
             border-color: #fff;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18), 0 0 12px rgba(212, 165, 116, 0.3);
         }
 
-        /* Niveau termine */
         .niveau.termine {
             opacity: 0.45;
             filter: grayscale(25%);
@@ -205,7 +194,6 @@
             background-repeat: no-repeat;
         }
 
-        /* Icone dans le niveau */
         .icone-niveau {
             font-size: 1.5em;
             line-height: 1;
@@ -251,7 +239,8 @@
             }
         }
 
-        /* Fenetre modale */
+        /* ---------- MODALE ADAPTATIVE ---------- */
+
         .modale-overlay {
             position: fixed;
             top: 0;
@@ -268,6 +257,9 @@
             transition: opacity 0.35s ease;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
+            /* Permet le scroll si la modale depasse l'ecran */
+            overflow-y: auto;
+            padding: 30px 10px;
         }
 
         .modale-overlay.visible {
@@ -279,13 +271,16 @@
             background: linear-gradient(170deg, #fffaf5, #fdf0e5);
             border-radius: 24px;
             padding: 24px 20px;
-            width: 92%;
-            max-width: 440px;
+            /* La largeur s'adapte au contenu, avec un max */
+            width: auto;
+            max-width: 92vw;
             text-align: center;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(200, 160, 130, 0.25);
             transform: translateY(30px) scale(0.9);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            /* S'adapte exactement au contenu */
+            display: inline-block;
         }
 
         .modale-overlay.visible .modale {
@@ -310,21 +305,35 @@
             font-style: italic;
         }
 
+        /* --- Styles pour les medias adaptatifs --- */
+
         .modale-media {
-            width: 100%;
-            max-width: 340px;
+            display: block;
             border-radius: 16px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
             margin: 0 auto 16px;
-            display: block;
-            object-fit: cover;
-            max-height: 300px;
             background: #f5e6d8;
+            /* Taille naturelle, sans contrainte de hauteur */
+            max-width: 100%;
+            height: auto;
+            /* Empeche l'image de depasser l'ecran sur mobile */
+            max-height: 80vh;
+            /* Garde les proportions */
+            object-fit: contain;
         }
 
         .modale-media.video {
-            max-height: 280px;
             background: #000;
+            /* Pour les videos, on garde une largeur minimale lisible */
+            min-width: 280px;
+            max-height: 75vh;
+        }
+
+        /* Conteneur du media pour gerer proprement l'espace */
+        .modale-media-conteneur {
+            display: inline-block;
+            line-height: 0;
+            margin: 0 auto 16px;
         }
 
         .bouton-fermer {
@@ -341,6 +350,7 @@
             box-shadow: 0 5px 18px rgba(180, 130, 100, 0.4);
             text-transform: uppercase;
             font-family: 'Georgia', serif;
+            display: inline-block;
         }
 
         .bouton-fermer:hover {
@@ -405,9 +415,14 @@
             .modale {
                 padding: 18px 14px;
                 border-radius: 20px;
+                max-width: 96vw;
             }
             .modale-media {
-                max-height: 210px;
+                max-height: 60vh;
+            }
+            .modale-media.video {
+                min-width: 240px;
+                max-height: 55vh;
             }
             .modale-texte {
                 font-size: 0.9em;
@@ -418,25 +433,19 @@
 </head>
 <body>
 
-    <!-- Conteneur principal -->
     <div class="conteneur">
         <div class="en-tete">
             <h1 class="titre">Joyeux Anniversaire Brooklyne</h1>
             <p class="sous-titre">Clique sur chaque niveau pour le devoiler</p>
         </div>
 
-        <!-- Barre de progression -->
         <div class="barre-progression">
             <div class="remplissage" id="remplissage"></div>
         </div>
         <p class="texte-progression" id="texte-progression">0 / 8 niveaux termines</p>
 
-        <!-- Grille des 8 niveaux -->
-        <div class="grille-niveaux" id="grille-niveaux">
-            <!-- Genere en JS -->
-        </div>
+        <div class="grille-niveaux" id="grille-niveaux"></div>
 
-        <!-- Indication -->
         <p style="color: #a08880; font-size: 0.8em; margin-top: 6px;">
             Les ronds sont des photos, les carres des videos
         </p>
@@ -447,22 +456,17 @@
         <div class="modale">
             <h2 class="modale-titre" id="modale-titre"></h2>
             <p class="modale-texte" id="modale-texte"></p>
-            <img class="modale-media" id="modale-image" src="" alt="" style="display:none;">
-            <video class="modale-media video" id="modale-video" controls playsinline style="display:none;">
-                <source src="" type="video/mp4">
-            </video>
+            <div class="modale-media-conteneur" id="modale-media-conteneur">
+                <img class="modale-media" id="modale-image" src="" alt="" style="display:none;">
+                <video class="modale-media video" id="modale-video" controls playsinline style="display:none;">
+                    <source src="" type="video/mp4">
+                </video>
+            </div>
             <button class="bouton-fermer" id="bouton-fermer">Continuer</button>
         </div>
     </div>
 
     <script>
-        // ============================================================
-        // === ZONE A PERSONNALISER ===
-        // ============================================================
-        // Change les chemins des medias (photos et videos).
-        // Les messages sont deja remplis avec ton poeme, decoupe en 8 strophes.
-        // ============================================================
-
         const niveauxData = [
             {
                 titre: "Pour toi",
@@ -513,10 +517,6 @@
                 type: "video"
             }
         ];
-
-        // ============================================================
-        // === FIN DE LA ZONE A PERSONNALISER ===
-        // ============================================================
 
         const TOTAL_NIVEAUX = niveauxData.length;
         let niveauActuel = 0;
@@ -585,9 +585,10 @@
 
         function cacherMediasModale() {
             modaleImage.style.display = 'none';
-            modaleImage.src = '';
+            modaleImage.removeAttribute('src');
             modaleVideo.style.display = 'none';
-            modaleVideo.querySelector('source').src = '';
+            const source = modaleVideo.querySelector('source');
+            if (source) source.removeAttribute('src');
             modaleVideo.pause();
             modaleVideo.currentTime = 0;
         }
@@ -616,7 +617,8 @@
                 modaleImage.style.display = 'block';
                 modaleVideo.style.display = 'none';
             } else {
-                modaleVideo.querySelector('source').src = data.media;
+                const source = modaleVideo.querySelector('source');
+                if (source) source.src = data.media;
                 modaleVideo.style.display = 'block';
                 modaleVideo.load();
                 modaleImage.style.display = 'none';
