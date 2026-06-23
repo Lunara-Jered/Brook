@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joyeux Anniversaire Brooklyne</title>
+    <style>
+        :root {
+            --rose: #e87d7d;
+            --dore: #d4a574;
+            --blanc-casse: #fdf6f0;
+            --texte: #4a3333;
+            --ombre-douce: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', 'Palatino', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--texte);
+            position: relative;
+            /* Image de fond : remplace par ton propre chemin */
+            background: url('Erza.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* Superposition douce pour la lisibilite */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 245, 238, 0.75);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Conteneur principal */
+        .conteneur {
+            position: relative;
+            z-index: 1;
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 25px 18px 50px;
+            text-align: center;
+        }
+
+        /* En-tete */
+        .en-tete {
+            margin-bottom: 18px;
+        }
+
+        .titre {
+            font-size: 2.5em;
+            font-weight: normal;
+            letter-spacing: 2px;
+            color: #b05e5e;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.6);
+            font-style: italic;
+        }
+
+        .sous-titre {
+            font-size: 1em;
+            color: #8b6b6b;
+            letter-spacing: 1px;
+        }
+
+        /* Barre de progression */
+        .barre-progression {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            height: 14px;
+            margin: 0 auto 20px;
+            max-width: 380px;
+            overflow: hidden;
+            border: 1px solid rgba(180, 130, 110, 0.4);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .remplissage {
+            height: 100%;
+            background: linear-gradient(90deg, #d4a574, #e8b88a, #d4a574);
+            border-radius: 20px;
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 0%;
+            box-shadow: 0 0 10px rgba(212, 165, 116, 0.5);
+        }
+
+        .texte-progression {
+            font-size: 0.85em;
+            color: #8b6b6b;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* Grille des niveaux */
+        .grille-niveaux {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 20px 8px;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 28px;
+            border: 1px solid rgba(200, 170, 150, 0.3);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        /* Style d'un niveau (pastille) */
+        .niveau {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.3em;
+            color: #fff;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 18px var(--ombre-douce);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            user-select: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .niveau:hover {
+            transform: scale(1.12);
+            border-color: #fff;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2), 0 0 18px rgba(212, 165, 116, 0.35);
+            z-index: 5;
+        }
+
+        .niveau:active {
+            transform: scale(0.9);
+            transition: transform 0.1s ease;
+        }
+
+        /* Niveaux photo (ronds) */
+        .niveau.photo {
+            background: radial-gradient(circle at 35% 30%, #e8b88a, #c4926a);
+            border-color: #d4a574;
+        }
+
+        .niveau.photo.atteint {
+            background: radial-gradient(circle at 35% 30%, #f0c8a0, #d4a574);
+            animation: briller 2.5s ease-in-out infinite;
+        }
+
+        /* Niveaux video (carres arrondis) */
+        .niveau.video {
+            border-radius: 18px;
+            background: linear-gradient(135deg, #c4927a, #a07060);
+            border-color: #c4927a;
+        }
+
+        .niveau.video.atteint {
+            background: linear-gradient(135deg, #d4a590, #b08070);
+            animation: briller 2.5s ease-in-out infinite 0.3s;
+        }
+
+        /* Niveau debloque */
+        .niveau.debloque {
+            border-color: #fff;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18), 0 0 12px rgba(212, 165, 116, 0.3);
+        }
+
+        /* Niveau termine */
+        .niveau.termine {
+            opacity: 0.45;
+            filter: grayscale(25%);
+            cursor: default;
+            border-style: dashed;
+            pointer-events: none;
+        }
+
+        .niveau.termine::after {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234a3333'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+            background-size: 20px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Icone dans le niveau */
+        .icone-niveau {
+            font-size: 1.5em;
+            line-height: 1;
+        }
+
+        .niveau.photo .icone-niveau::before {
+            content: '';
+            display: block;
+            width: 22px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 3px;
+            margin: 0 auto 3px;
+        }
+
+        .niveau.photo .icone-niveau::after {
+            content: '';
+            display: block;
+            width: 7px;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.55);
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+
+        .niveau.video .icone-niveau::before {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-left: 15px solid rgba(255, 255, 255, 0.85);
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+            margin: 0 auto;
+        }
+
+        @keyframes briller {
+            0%, 100% {
+                box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15), 0 0 6px rgba(212, 165, 116, 0.25);
+            }
+            50% {
+                box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15), 0 0 22px rgba(212, 165, 116, 0.55), 0 0 38px rgba(212, 165, 116, 0.3);
+            }
+        }
+
+        /* Fenetre modale */
+        .modale-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 25, 20, 0.7);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modale-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modale {
+            background: linear-gradient(170deg, #fffaf5, #fdf0e5);
+            border-radius: 24px;
+            padding: 24px 20px;
+            width: 92%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(200, 160, 130, 0.25);
+            transform: translateY(30px) scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .modale-overlay.visible .modale {
+            transform: translateY(0) scale(1);
+        }
+
+        .modale-titre {
+            font-size: 1.2em;
+            font-weight: normal;
+            font-style: italic;
+            margin-bottom: 6px;
+            color: #b05e5e;
+            letter-spacing: 1px;
+        }
+
+        .modale-texte {
+            font-size: 1em;
+            color: #5c4040;
+            margin-bottom: 16px;
+            line-height: 1.7;
+            white-space: pre-line;
+            font-style: italic;
+        }
+
+        .modale-media {
+            width: 100%;
+            max-width: 340px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            margin: 0 auto 16px;
+            display: block;
+            object-fit: cover;
+            max-height: 300px;
+            background: #f5e6d8;
+        }
+
+        .modale-media.video {
+            max-height: 280px;
+            background: #000;
+        }
+
+        .bouton-fermer {
+            background: linear-gradient(135deg, #d4a574, #c4926a);
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.25s ease;
+            box-shadow: 0 5px 18px rgba(180, 130, 100, 0.4);
+            text-transform: uppercase;
+            font-family: 'Georgia', serif;
+        }
+
+        .bouton-fermer:hover {
+            background: linear-gradient(135deg, #e0b890, #d4a574);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(180, 130, 100, 0.5);
+        }
+
+        .bouton-fermer:active {
+            transform: scale(0.95);
+        }
+
+        /* Particules de victoire */
+        .particule-victoire {
+            position: fixed;
+            pointer-events: none;
+            z-index: 200;
+            font-size: 1.4em;
+            animation: exploser 1.2s ease-out forwards;
+        }
+
+        @keyframes exploser {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Confettis finaux */
+        @keyframes tomber {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .titre {
+                font-size: 1.7em;
+            }
+            .niveau {
+                width: 56px;
+                height: 56px;
+                font-size: 1.1em;
+            }
+            .niveau.video {
+                border-radius: 14px;
+            }
+            .grille-niveaux {
+                gap: 11px;
+                padding: 15px 6px;
+            }
+            .modale {
+                padding: 18px 14px;
+                border-radius: 20px;
+            }
+            .modale-media {
+                max-height: 210px;
+            }
+            .modale-texte {
+                font-size: 0.9em;
+                line-height: 1.5;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Conteneur principal -->
+    <div class="conteneur">
+        <div class="en-tete">
+            <h1 class="titre">Joyeux Anniversaire Brooklyne</h1>
+            <p class="sous-titre">Clique sur chaque niveau pour le devoiler</p>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="barre-progression">
+            <div class="remplissage" id="remplissage"></div>
+        </div>
+        <p class="texte-progression" id="texte-progression">0 / 8 niveaux termines</p>
+
+        <!-- Grille des 8 niveaux -->
+        <div class="grille-niveaux" id="grille-niveaux">
+            <!-- Genere en JS -->
+        </div>
+
+        <!-- Indication -->
+        <p style="color: #a08880; font-size: 0.8em; margin-top: 6px;">
+            Les ronds sont des photos, les carres des videos
+        </p>
+    </div>
+
+    <!-- Modale -->
+    <div class="modale-overlay" id="modale-overlay">
+        <div class="modale">
+            <h2 class="modale-titre" id="modale-titre"></h2>
+            <p class="modale-texte" id="modale-texte"></p>
+            <img class="modale-media" id="modale-image" src="" alt="" style="display:none;">
+            <video class="modale-media video" id="modale-video" controls playsinline style="display:none;">
+                <source src="" type="video/mp4">
+            </video>
+            <button class="bouton-fermer" id="bouton-fermer">Continuer</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // === ZONE A PERSONNALISER ===
+        // ============================================================
+        // Change les chemins des medias (photos et videos).
+        // Les messages sont deja remplis avec ton poeme, decoupe en 8 strophes.
+        // ============================================================
+
+        const niveauxData = [
+            {
+                titre: "Pour toi",
+                message: "Pour toi, mon desir si lumineux,\n\nEn ce jour de ta naissance divine,\nJe t'offre ces vers, ce coeur qui s'abandonne,\nA ta beaute qui toujours m'enrhume.",
+                media: "photos/Brook.jpg",
+                type: "image"
+            },
+            {
+                titre: "Tes tresors",
+                message: "Ton esprit vif, si brillant et si prompt,\nTa voix douce, un baume sur mes nuits,\nTon rire franc, si juste et si limpide,\nSont les tresors qui comblent ma vie.",
+                media: "videos/Video.mp4",
+                type: "video"
+            },
+            {
+                titre: "Ton amitie",
+                message: "J'aime ton amitie, precieuse et franche,\nJ'aime ta force, quand tu sais etre rage,\nEt quand le soir, dans mon lit solitaire,\nJe me souviens de ta peau si fiere.",
+                media: "photos/Brook2.jpg",
+                type: "image"
+            },
+            {
+                titre: "Un paradis",
+                message: "Tes nudes, un refuge, un paradis,\nOu mes mains errent et te decouvrent,\nMon plaisir monte, une vague ardente,\nEn pensant a toi, ma demente.",
+                media: "videos/Video2.mp4",
+                type: "video"
+            },
+            {
+                titre: "Je reve",
+                message: "Je reve encore de tes mains entre mes cuisses,\nRechauffant ce desir qui t'obsede,\nEt voir tes seins, deux montagnes parfaites,\nApaise mon ame et la redresse.",
+                media: "photos/Brook3.jpg",
+                type: "image"
+            },
+            {
+                titre: "A tes pieds",
+                message: "Je voudrais si bas, a tes pieds si beaux,\nMettre mes levres, humble et soumis,\nEt parcourir ton corps tout entier,\nComme un pelerin assoiffe.",
+                media: "videos/Video3.mp4",
+                type: "video"
+            },
+            {
+                titre: "Ma belle",
+                message: "Alors, joyeux anniversaire, ma belle,\nToi qui fais battre mon coeur a tire-d'aile,\nPuisses-tu etre heureuse en ce jour,\nEt savoir que tu es mon unique amour.",
+                media: "photos/Brook1.jpg",
+                type: "image"
+            },
+            {
+                titre: "Pour toujours",
+                message: "Tu es cette beaute qui captive l'esprit,\nCette intelligence qui eclaire mes nuits,\nCette perfection que je ne puis definir,\nUn tresor que je cheris dans ma memoire.\n\nNous sommes deux fous dans un monde trop sage,\nDeux ames folles qui dansent sur la meme page,\nMais la realite, ce voile si lourd,\nNous empeche de voir ce grand amour.\n\nJe veux creer avec toi des flashbacks eclatants,\nDes moments graves, des souvenirs vibrants,\nOu le temps s'arrete et nous sommes enfin,\nLui et toi, dans un eternel destin.\n\nMerci d'etre la, meme en silence,\nTu es en moi, une belle presence,\nEt j'espere que ces vers te toucheront,\nComme mon coeur, chaque fois que tu y songes.",
+                media: "videos/Video4.mp4",
+                type: "video"
+            }
+        ];
+
+        // ============================================================
+        // === FIN DE LA ZONE A PERSONNALISER ===
+        // ============================================================
+
+        const TOTAL_NIVEAUX = niveauxData.length;
+        let niveauActuel = 0;
+
+        const grilleNiveaux = document.getElementById('grille-niveaux');
+        const remplissage = document.getElementById('remplissage');
+        const texteProgression = document.getElementById('texte-progression');
+        const modaleOverlay = document.getElementById('modale-overlay');
+        const modaleTitre = document.getElementById('modale-titre');
+        const modaleTexte = document.getElementById('modale-texte');
+        const modaleImage = document.getElementById('modale-image');
+        const modaleVideo = document.getElementById('modale-video');
+        const boutonFermer = document.getElementById('bouton-fermer');
+
+        function creerGrille() {
+            grilleNiveaux.innerHTML = '';
+            for (let i = 0; i < TOTAL_NIVEAUX; i++) {
+                const data = niveauxData[i];
+                const niveauEl = document.createElement('div');
+                niveauEl.classList.add('niveau');
+
+                if (data.type === 'image') {
+                    niveauEl.classList.add('photo');
+                } else {
+                    niveauEl.classList.add('video');
+                }
+
+                const icone = document.createElement('span');
+                icone.classList.add('icone-niveau');
+                niveauEl.appendChild(icone);
+
+                niveauEl.id = 'niveau-' + i;
+
+                if (i < niveauActuel) {
+                    niveauEl.classList.add('termine', 'debloque');
+                } else if (i === niveauActuel) {
+                    niveauEl.classList.add('debloque', 'atteint');
+                }
+
+                niveauEl.addEventListener('click', () => ouvrirNiveau(i));
+                grilleNiveaux.appendChild(niveauEl);
+            }
+        }
+
+        function mettreAJourInterface() {
+            const pourcentage = (niveauActuel / TOTAL_NIVEAUX) * 100;
+            remplissage.style.width = pourcentage + '%';
+            texteProgression.textContent = niveauActuel + ' / ' + TOTAL_NIVEAUX + ' niveaux termines';
+
+            for (let i = 0; i < TOTAL_NIVEAUX; i++) {
+                const el = document.getElementById('niveau-' + i);
+                if (!el) continue;
+                el.classList.remove('termine', 'debloque', 'atteint');
+                if (i < niveauActuel) {
+                    el.classList.add('termine', 'debloque');
+                } else if (i === niveauActuel) {
+                    el.classList.add('debloque', 'atteint');
+                }
+            }
+
+            if (niveauActuel >= TOTAL_NIVEAUX) {
+                remplissage.style.width = '100%';
+                texteProgression.textContent = 'Tous les niveaux sont termines ! Joyeux anniversaire Brooklyne !';
+            }
+        }
+
+        function cacherMediasModale() {
+            modaleImage.style.display = 'none';
+            modaleImage.src = '';
+            modaleVideo.style.display = 'none';
+            modaleVideo.querySelector('source').src = '';
+            modaleVideo.pause();
+            modaleVideo.currentTime = 0;
+        }
+
+        function ouvrirNiveau(index) {
+            if (index > niveauActuel) {
+                const elActuel = document.getElementById('niveau-' + niveauActuel);
+                if (elActuel) {
+                    elActuel.style.animation = 'none';
+                    elActuel.offsetHeight;
+                    elActuel.style.animation = 'briller 0.6s ease-in-out 3';
+                    setTimeout(() => {
+                        elActuel.style.animation = 'briller 2.5s ease-in-out infinite';
+                    }, 1800);
+                }
+                return;
+            }
+
+            const data = niveauxData[index];
+            cacherMediasModale();
+            modaleTitre.textContent = data.titre;
+            modaleTexte.textContent = data.message;
+
+            if (data.type === 'image') {
+                modaleImage.src = data.media;
+                modaleImage.style.display = 'block';
+                modaleVideo.style.display = 'none';
+            } else {
+                modaleVideo.querySelector('source').src = data.media;
+                modaleVideo.style.display = 'block';
+                modaleVideo.load();
+                modaleImage.style.display = 'none';
+            }
+
+            modaleOverlay.classList.add('visible');
+
+            if (index === niveauActuel) {
+                niveauActuel++;
+                mettreAJourInterface();
+                setTimeout(() => lancerParticulesVictoire(), 200);
+            }
+        }
+
+        function fermerModale() {
+            modaleOverlay.classList.remove('visible');
+            cacherMediasModale();
+            if (niveauActuel >= TOTAL_NIVEAUX) {
+                setTimeout(() => lancerConfettisFinaux(), 300);
+            }
+        }
+
+        function lancerParticulesVictoire() {
+            const el = document.getElementById('niveau-' + (niveauActuel - 1));
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            const centreX = rect.left + rect.width / 2;
+            const centreY = rect.top + rect.height / 2;
+            const symboles = ['*', '.', '+'];
+            const couleurs = ['#d4a574', '#e8b88a', '#b05e5e', '#c4926a', '#fdf0e5', '#fff'];
+
+            for (let i = 0; i < 20; i++) {
+                const particule = document.createElement('span');
+                particule.classList.add('particule-victoire');
+                particule.textContent = symboles[Math.floor(Math.random() * symboles.length)];
+                particule.style.left = centreX + 'px';
+                particule.style.top = centreY + 'px';
+                particule.style.color = couleurs[Math.floor(Math.random() * couleurs.length)];
+                particule.style.setProperty('--dx', (Math.random() - 0.5) * 160 + 'px');
+                particule.style.setProperty('--dy', (Math.random() - 0.5) * 160 + 'px');
+                document.body.appendChild(particule);
+                setTimeout(() => particule.remove(), 1300);
+            }
+        }
+
+        function lancerConfettisFinaux() {
+            const couleurs = ['#d4a574', '#e8b88a', '#b05e5e', '#c4926a', '#fdf0e5', '#e87d7d', '#f5d5c0'];
+            for (let i = 0; i < 70; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.cssText = `
+                        position: fixed;
+                        top: -20px;
+                        left: ${Math.random() * 100}%;
+                        width: ${6 + Math.random() * 12}px;
+                        height: ${6 + Math.random() * 12}px;
+                        background: ${couleurs[Math.floor(Math.random() * couleurs.length)]};
+                        border-radius: ${Math.random() > 0.5 ? '50%' : '3px'};
+                        animation: tomber ${2 + Math.random() * 4}s linear forwards;
+                        z-index: 300;
+                        pointer-events: none;
+                    `;
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 7000);
+                }, i * 20);
+            }
+        }
+
+        boutonFermer.addEventListener('click', fermerModale);
+        modaleOverlay.addEventListener('click', (e) => {
+            if (e.target === modaleOverlay) fermerModale();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modaleOverlay.classList.contains('visible')) fermerModale();
+        });
+
+        creerGrille();
+        mettreAJourInterface();
+    </script>
+</body>
+</html>
